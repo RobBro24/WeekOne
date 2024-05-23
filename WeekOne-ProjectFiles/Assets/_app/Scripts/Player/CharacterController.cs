@@ -1,4 +1,5 @@
 using System;
+using _app.Scripts.Managers;
 using UnityEngine;
 
 namespace _app.Scripts.Player
@@ -24,29 +25,19 @@ namespace _app.Scripts.Player
 
         public void Update()
         {
+            MovementVector.x = Input.GetAxis("Horizontal");
+            MovementVector.y = Input.GetAxis("Vertical");
+            
+            PlayerMovement(MovementVector);
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                PlayerJump();
+                GameManager.Instance.playerScore++;
             }
-
-            if (Input.GetKeyDown(KeyCode.W))
+            else
             {
-                MovementVector.x = 1;
+                Debug.Log(message:"Game Manager is missing!");
             }
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                MovementVector.x = -1;
-            }
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                MovementVector.z = 1;
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                MovementVector.z = -1;
-            }
-            
-            PlayerMovement();
 
         }
 
@@ -55,9 +46,9 @@ namespace _app.Scripts.Player
             rb.AddForce(JumpForce, ForceMode.Impulse);
         }
 
-        private void PlayerMovement()
+        private void PlayerMovement(Vector2 movement)
         {
-            transform.Translate(new Vector3(MovementVector.x,MovementVector.y,MovementVector.z)*MovementSpeed * Time.deltaTime);
+            transform.Translate(new Vector3(movement.y,0,movement.x)*(MovementSpeed * Time.deltaTime));
         }
 
     }
